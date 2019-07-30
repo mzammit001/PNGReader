@@ -28,17 +28,17 @@ public class PNGParser {
             if (fis.read(length, 0, 4) < 4)
                 throw new IOException("Broken file");
 
-            long chunkLength = uintBytesToLong(length);
+            long chunkLength = Utils.uintBytesToLong(length);
 
             byte[] data = new byte[(int)chunkLength + 4];
-            if (fis.read(data, 0, data.length) < data.length)
+            if (fis.read(data, 0, (int)chunkLength + 4) < (int)chunkLength + 4)
                 throw new IOException("Broken file");
 
             byte[] crc = new byte[4];
             if (fis.read(crc, 0, 4) < 4)
                 throw new IOException("Broken file");
 
-            long chunkCrc = uintBytesToLong(crc);
+            long chunkCrc = Utils.uintBytesToLong(crc);
             pngData.addChunk(data, chunkCrc);
         }
 
@@ -48,18 +48,5 @@ public class PNGParser {
     public PNGData getResult() throws PngValidationException {
         pngData.validate();
         return pngData;
-    }
-
-    private long uintBytesToLong(byte[] data) {
-        if (data.length > 4)
-            return 0L;
-
-        long res = 0L;
-
-        for (int i = 0, lsb = (data.length - 1) * 8; i < data.length; ++i, lsb -= 8) {
-            res |= Byte.toUnsignedLong(data[i]) << lsb;
-        }
-
-        return res;
     }
 }

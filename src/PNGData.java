@@ -21,12 +21,10 @@ public class PNGData {
         if (checksum.getValue() != crc)
             throw new IllegalArgumentException(String.format("CRC mismatch on chunk with tag: %s", chunkTag));
 
-        byte[] chunkData = new byte[data.length-4];
-        ByteArrayInputStream bais = new ByteArrayInputStream(chunkData);
-        bais.read(data, 4, data.length-4);
+        byte[] chunkData = Arrays.copyOfRange(data, 4, data.length);
 
         try {
-            chunks.add(new Chunk(chunkTag, data));
+            chunks.add(new Chunk(chunkTag, chunkData));
         }
         catch (IllegalArgumentException ex) {
             System.out.printf("Skipping chunk with tag: %s\n", chunkTag);

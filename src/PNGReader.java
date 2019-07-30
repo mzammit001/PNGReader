@@ -2,6 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class PNGReader {
+
     public static void main(String[] args) {
         if (args.length < 1) {
             System.out.println("Usage: PNGReader <input file>");
@@ -17,6 +18,9 @@ public class PNGReader {
             for (ChunkTag ct : data.getChunkTags()) {
                 System.out.println(ct);
             }
+
+            PNGImage image = new PNGImage(data);
+            System.out.println(image.getHeader());
 
         } catch (FileNotFoundException ex) {
             System.out.printf("FILE NOT FOUND: %s\n", args[0]);
